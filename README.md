@@ -10,7 +10,7 @@ Here is a description of each file in the repository:
     - The sample data used of the AFK ETF from Barchart.com  
 2. eza_options-overview-history-11-01-2025.csv
     - The sample data used of the EZA ETF from Barchart.com  
-3. Implied Volatility vs Realized Volatility for an Africa-Exposure ETF.tex
+3. Implied_Volatility_vs_Realized_Volatility_for_an_Africa_Exposure_ETF.pdf
     - Latex document featuring abstract, analysis, and takeaways
 4. main.ipynb
     - The Python code that supplied the plots 
