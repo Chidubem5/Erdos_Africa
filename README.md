@@ -9,4 +9,5 @@ Here is a description of each file in the repository:
 3. Implied Volatility vs Realized Volatility for an Africa-Exposure ETF.pdf
     - Latex document featuring abstract, analysis, and takeaways
 4. main.ipynb
-    - The Python code that supplied the plots 
+    - The Python code that supplied the plots
+5. The remaining files are plots, deliverables from the code.
