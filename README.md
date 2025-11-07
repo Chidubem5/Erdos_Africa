@@ -1,5 +1,3 @@
-As a participant of the Erdos Institute Quant Bootcamp, participants need to complete a project that demonstrates our coding skills, economics background, mathematical acumine, intellectual curiousity, and overrall drive to pursue knowledge. 
-
 I have decided to pursue a project titled “Implied Volatility vs. Realized Volatility for an Africa-Exposure ETF, with a West Africa Regime Overlay.”
 
 As a Nigerian-American, I have a personal interest in understanding African financial markets—particularly those in West Africa, where local economic factors often differ significantly from continental trends.
