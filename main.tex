@@ -1,0 +1,234 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% writeLaTeX Example: Academic Paper Template
+%
+% Source: http://www.writelatex.com
+% 
+% Feel free to distribute this example, but please keep the referral
+% to writelatex.com
+% 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% How to use writeLaTeX: 
+%
+% You edit the source code here on the left, and the preview on the
+% right shows you the result within a few seconds.
+%
+% Bookmark this page and share the URL with your co-authors. They can
+% edit at the same time!
+%
+% You can upload figures, bibliographies, custom classes and
+% styles using the files menu.
+%
+% If you're new to LaTeX, the wikibook is a great place to start:
+% http://en.wikibooks.org/wiki/LaTeX
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[twocolumn,showpacs,%
+  nofootinbib,aps,superscriptaddress,%
+  eqsecnum,prd,notitlepage,showkeys,10pt]{revtex4-1}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{dcolumn}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{float} 
+\usepackage{sectsty}
+\sectionfont{\centering}
+
+
+
+\begin{document}
+
+\title{Implied Volatility vs Realized Volatility for an Africa-Exposure ETF 
+}
+\author{Chidubem F. Umeh}
+\affiliation{University of Central Florida}
+
+\begin{abstract}
+This project investigates the efficiency of the Black–Scholes–Merton framework when applied to the VanEck Africa Index ETF (AFK), using market-implied volatility as a forecast of realized volatility. By comparing AFK’s implied and forward realized volatilities, I found a persistent volatility risk premium—implied volatility systematically exceeded realized volatility, especially during macro or liquidity shocks—indicating that markets consistently overprice uncertainty in frontier assets, ie. less liquid African exposures. Correlation between IV and RV remained modest $(\approx 0.27)$, and a delta-hedging simulation showed that hedged P&L stayed nearly flat while unhedged exposure exhibited large swings, confirming that market-implied vol provides a defensible hedge input even when it overstates realized risk. These results highlight structural inefficiencies in African-exposure derivatives and suggest opportunities for volatility-arbitrage and risk-premium harvesting in emerging markets.
+
+
+\end{abstract}
+
+\maketitle
+
+\section{Background}
+
+The decision to analyze the VanEck Africa Index ETF (AFK) was driven by its distinction as the only U.S.-traded pan-African ETF. While the iShares MSCI South Africa ETF (EZA) offers an alternative, its holdings are heavily concentrated in South African assets, providing limited exposure to the broader African continent.
+
+Before conducting this study, the key distinction between European and American options was understood to be their exercise \textit{timing}—European options can be exercised only at expiration, whereas American options can be exercised at any time up to and including the expiration date (subject to broker and account permissions). Since AFK options are American-style, applying the Black–Scholes (BS) model, which assumes European-style exercise, can introduce pricing inaccuracies when evaluating these ETF options.
+
+
+\section{Implied Volatility}
+
+In the BS pricing formula, given market price C_{mkt}: 
+
+$$
+C_{\text{mkt}} = S_0 e^{-qT} N(d_1) - K e^{-rT} N(d_2)
+$$
+
+where $d_{1}$ and $d_{2}$ are described as: 
+
+$$
+d_1 = \frac{\ln\left(\frac{S_0}{K}\right) + (r - q + \tfrac{1}{2}\sigma^2)T}{\sigma \sqrt{T}},
+\quad
+d_2 = d_1 - \sigma \sqrt{T}
+$$
+
+The components of the option formula can be described as:
+\begin{itemize}
+
+\item $C_{\text{mkt}} $ = option's market price, current market price).
+
+\item K = strike price; fixed price (or exercised price) in option contract.
+
+\item r = risk-free rate; continuously compounded annualized return of a risk-free asset.
+
+\item q = dividend yield; ratio of a company's annual dividend payment to its stock price, which can influence the value of call & put options.
+
+\item T = time to expiration, time remaining until the option’s expiration date, can be called "theta decay". 
+
+\item N = cumulative normal distribution, probability that a standard normally distributed random variable is less than or equal to a given number of standard deviations from the mean. 
+\end{itemize}
+
+The Implied Volatility (IV) is $ \sigma $ which is found using a root finding algorithm, such as Newton-Raphson. 
+In our study, the data source, \href{https://www.barchart.com/etfs-funds/quotes/AFK}{Barchart}, provided the calculated IV points. 
+
+\section{Realized Volatility}
+
+The Realized Volatility (RV) over a 5-day window measures how much the asset price actually fluctuated in a specified period.  It is computed from daily log-returns and annualized to make it comparable with IV. 
+
+The formula to acquire RV over 5 days: 
+
+$$
+\text{RV}_{t \to t+5} = 
+\sqrt{
+\sum_{d=1}^{5} r_{t+d}^2 \cdot \frac{252}{5}
+},
+\quad 
+r_{t+d} = \ln\!\left(\frac{S_{t+d}}{S_{t+d-1}}\right)
+$$
+
+Where:
+\begin{itemize}
+\item $S_{t}$ = price of the underlying asset on day \textit{t}
+
+\item $r_{t+d}$ = daily log return
+
+\item 252 = approximate number of trading days per year\
+
+\item 5 = number of days in the window (e.g., a trading week)
+
+\item $RV_{t \to t+5}$ = annualized realized volatility over the 5-day window
+
+
+
+Realized Volatility (RV): reflects \textit{actual} price fluctuations observed in historical data. 
+
+
+Implied Volatility (IV): reflects \textit{expected} future volatility inferred from option prices.
+
+Comparing these two helps assess whether options are over- or under-priced relative to recent market behavior.
+
+\end{itemize}
+
+\section{Analysis}
+
+Figures \ref{fig:rv}  and ~\ref{fig:iv}, respectively, illustrate the evolution of the ETF’s RV and IV over the past four years. A more comprehensive comparison is provided in Figure~\ref{fig:iv_rv}, where both measures are plotted together, offering a clearer visualization of their relative dynamics and divergence over time. 
+
+From Fall 2022 through early 2023, the data reveal a clear underestimation of AFK’s actual price fluctuations relative to the market’s expectations. This relationship reverses around January 2023, when implied volatility suddenly spikes above realized volatility for a period of two to three months. Such behavior suggests that a market event or macroeconomic shock—possibly tied to geopolitical or liquidity developments—led traders to anticipate substantial future movement in the ETF’s underlying assets. 
+
+Following this period, IV declined sharply in March 2023, while realized volatility rose and remained elevated for nearly a year and a half. This sustained divergence indicates that the market consistently underestimated the ETF’s realized risk during this interval. Eventually, by mid-to-late 2024, IV caught up, leading to an alternating pattern between the two measures through 2025. This back-and-forth movement illustrates a \textit{non-linear and adaptive relationship} between market expectations and actual outcomes, emphasizing how sentiment and realized uncertainty in frontier markets like AFK can decouple over extended periods.
+
+According to Figure \ref{fig:pl}, the delta-hedged results exhibit no statistically significant drift, implying that the Black–Scholes model’s fair-value assumption approximately holds. A small positive average P\&L per option suggests a modest volatility-risk premium, where IV exceeded RV on average. 
+
+In reference to Figure~\ref{fig:unhed_hed}, from Summer~2025 through late Fall, the delta-hedged position produced a consistently higher cumulative return than the unhedged option, reflecting periods when daily hedging effectively captured small gains from volatility mispricing. However, since late~2025, the unhedged option has delivered a markedly stronger and more sustained return, while the hedged position has trended toward breakeven. This pattern underscores the expected outcome of hedging: while it reduces exposure to large directional moves, it also limits upside potential. In this case, the hedge successfully minimized volatility in returns but did so at the cost of overall profitability.
+
+According to Figure \ref{fig:vol}, there were two distinct spikes in January 2023 and Fall 2025 where IV\textgreater  RV and so context was needed. This stemmed for a multitude of things: 
+
+So around January 2023, the spike in the premium may reflect the market beginning to anticipate elevated risk in African-exposure assets (AFK) even though actual RV hadn’t yet spiked to those levels.
+
+Early in 2023, reports flagged increasing political and economic volatility in Africa — such as, higher food/energy inflation due to spill-over from the Russia-Ukraine war and reduced global growth expectations. 
+
+Africa’s macro outlook was being revised. The African Development Bank in its January 2023 report noted continent growth projections were trimmed
+
+At the same time, policy uncertainty and external shocks (commodities, inflation) likely made investors demand more premium for African-exposure risk, pushing IV higher even before realized moves caught up. 
+
+The spike in Fall 2025 might reflect investor repositioning: higher expectations (both of opportunity and of risk) in African-exposure, which pushes up IV more than RV immediately. 
+
+By 2025, investors acknowledged the upwards momentum of Africa: for example a piece noted African stock markets “are leaving developed peers in the dust” in 2025. 
+
+As investor sentiment shifts and more capital flows into frontier/ex-emerging markets, IV can rise (because more risk is perceived) before the RV actually increases. 
+
+\section{Conclusion}
+
+Despite earlier concerns about potential pricing inaccuracies when applying the Black--Scholes (BS) framework to American-style ETFs, several key insights emerge from this study:
+
+\begin{enumerate}
+    \item The BS model remains an effective tool for \textit{risk minimization}. During periods of low market turbulence, the delta-hedged positions exhibited stable, near-neutral performance, validating the model’s ability to manage exposure even in frontier-market assets such as AFK.
+    
+    \item The results suggest that investors tend to \textit{overestimate risk} in African markets. The persistent gap where implied volatility exceeds realized volatility indicates that uncertainty surrounding African assets is often priced at a premium---a pattern that may reflect global sentiment rather than fundamental instability.
+    
+    \item The lack of accessible, high-frequency data on African currencies---particularly the Nigerian Naira (NGN)---limits AFK’s effectiveness as a complete proxy for regional financial dynamics. Future research could integrate FX and macroeconomic data to more accurately capture the link between currency volatility and equity-based ETFs across Africa.
+\end{enumerate}
+
+Overall, this analysis highlights both the robustness and the limitations of classical volatility models in emerging and frontier markets, offering a foundation for further exploration into volatility forecasting, hedging efficiency, and regional risk perception.
+
+\section{Data}
+% Commands to include a figure:
+%Figure 1
+\begin{figure*}[h!]
+  \centering
+  \includegraphics[width=\textwidth]{AFK Forward Realized Volatility (next 5 trading days).png}
+  \caption{\centering AFK Forward Realized Volatility (next 5 trading days)}
+  \label{fig:rv}
+\end{figure*}
+
+% Figure 2
+\begin{figure*}[h]
+  \centering
+  \includegraphics[width=\textwidth]{AFK Implied Volatility Over Time.png}
+  \caption{\centering AFK Implied Volatility Over Time}
+  \label{fig:iv}
+\end{figure*}
+
+% Figure 3
+\begin{figure*}[h!]
+  \centering
+  \includegraphics[width=\textwidth]{AFK- IV vs Forward Realized Volatility (5 trading days).png}
+  \caption{\centering FK: IV vs Forward Realized Volatility (5 trading days)}  
+  \label{fig:iv_rv}
+\end{figure*}
+
+%Figure 4
+\begin{figure*}[h!]
+  \centering
+  \includegraphics[width=\textwidth]{Daily Delta-Hedged P&L vs Underlying Return.png}
+  \caption{\centering Daily Delta-Hedged P\&L vs Underlying Return}  
+  \label{fig:pl}
+\end{figure*}
+
+% Figure 5
+\begin{figure*}[h!]
+  \centering
+  \includegraphics[width=\textwidth]{Rolling ATM Call- Unhedged vs Delta-Hedged Cumulative P&L (1-day steps).png}
+  \caption{\centering Rolling ATM Call: Unhedged vs Delta-Hedged Cumulative P\&L (1-day steps)}  
+  \label{fig:unhed_hed}
+\end{figure*}
+
+% Figure 6
+\begin{figure*}[h!]
+  \centering
+  \includegraphics[width=\textwidth]{vol_risk_premium_IV_minus_RV_next5d.png}
+  \caption{\centering Rolling ATM Call: Unhedged vs Delta-Hedged Cumulative P\&L (1-day steps)}  
+  \label{fig:vol}
+\end{figure*}
+
+
+\begin{acknowledgments}
+I thank God for blessing me with the opportunity and perseverance to complete this study. I also extend my sincere gratitude to Dr.~Thomas~Polstra for his guidance, patience, and expertise throughout this research.
+\end{acknowledgments}
+
+\end{document}
