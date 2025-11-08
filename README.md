@@ -14,3 +14,4 @@ Here is a description of each file in the repository:
     - Latex document featuring abstract, analysis, and takeaways
 4. main.ipynb
     - The Python code that supplied the plots 
+5. The remaining files are deliverables from the python code. 
